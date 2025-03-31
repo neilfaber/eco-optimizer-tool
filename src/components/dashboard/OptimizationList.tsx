@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Check, AlertTriangle, ArrowRight, Zap } from 'lucide-react';
+import { recordOptimization } from '@/services/userService';
 
 interface Optimization {
   id: string;
@@ -17,20 +18,42 @@ interface Optimization {
 interface OptimizationListProps {
   optimizations: Optimization[];
   onImplement: (id: string) => void;
+  websiteUrl?: string;
 }
 
 const OptimizationList: React.FC<OptimizationListProps> = ({ 
   optimizations,
-  onImplement
+  onImplement,
+  websiteUrl = 'example.com'
 }) => {
   const { toast } = useToast();
   
   const handleImplementClick = (id: string) => {
-    onImplement(id);
-    toast({
-      title: "Optimization Applied",
-      description: "The changes have been successfully implemented.",
-    });
+    const optimization = optimizations.find(opt => opt.id === id);
+    
+    if (optimization) {
+      // Update the UI first
+      onImplement(id);
+      
+      // Record this optimization in the user's profile
+      const scoreImprovement = optimization.impact === 'high' ? 8 : 
+                              optimization.impact === 'medium' ? 5 : 3;
+                              
+      recordOptimization(
+        websiteUrl,
+        optimization.title,
+        scoreImprovement,
+        optimization.co2Saving
+      );
+      
+      // Show toast notification with eco credits earned
+      const ecoCreditsEarned = Math.round(optimization.co2Saving * 5); // 5 credits per kg saved
+      
+      toast({
+        title: "Optimization Applied",
+        description: `You earned ${ecoCreditsEarned} eco credits and saved ${optimization.co2Saving}kg of CO₂ per year!`,
+      });
+    }
   };
   
   // Get impact color

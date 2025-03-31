@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { isUserLoggedIn } from '@/services/userService';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import EcoScoreCard from '@/components/dashboard/EcoScoreCard';
@@ -92,10 +94,18 @@ const greenHosts = [
 const Dashboard = () => {
   const [searchParams] = useSearchParams();
   const url = searchParams.get('url') || 'example.com';
+  const navigate = useNavigate();
   
   const [score, setScore] = useState(62);
   const [optimizations, setOptimizations] = useState(initialOptimizations);
   const [implemented, setImplemented] = useState(0);
+  
+  // Check authentication
+  useEffect(() => {
+    if (!isUserLoggedIn()) {
+      navigate('/signin', { state: { returnUrl: '/dashboard' } });
+    }
+  }, [navigate]);
   
   // Calculate score based on implemented optimizations
   useEffect(() => {
@@ -150,6 +160,7 @@ const Dashboard = () => {
               <OptimizationList 
                 optimizations={optimizations}
                 onImplement={handleImplementOptimization}
+                websiteUrl={url}
               />
             </div>
             
