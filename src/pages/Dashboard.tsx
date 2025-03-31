@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -51,7 +50,7 @@ const initialOptimizations = [
   {
     id: '5',
     title: 'Implement lazy loading for below-the-fold images',
-    description: 'Only load images when they're about to enter the viewport.',
+    description: 'Only load images when they\'re about to enter the viewport.',
     impact: 'medium' as const,
     category: 'Images',
     co2Saving: 12.1,
@@ -60,7 +59,7 @@ const initialOptimizations = [
   {
     id: '6',
     title: 'Replace custom fonts with system fonts',
-    description: 'System fonts don't require additional downloads and render faster.',
+    description: 'System fonts don\'t require additional downloads and render faster.',
     impact: 'low' as const,
     category: 'Fonts',
     co2Saving: 4.5,
