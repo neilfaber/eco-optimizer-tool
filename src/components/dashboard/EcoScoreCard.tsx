@@ -49,7 +49,12 @@ const EcoScoreCard: React.FC<EcoScoreCardProps> = ({ score }) => {
       </div>
       
       <div className="mb-2">
-        <Progress value={score} className="h-2" indicatorClassName={getProgressColor(score)} />
+        <Progress value={score} className="h-2" style={{backgroundColor: 'rgb(229, 231, 235)'}} />
+        <style jsx>{`
+          .${getProgressColor(score)} {
+            background-color: ${getProgressColor(score).replace('bg-', '')};
+          }
+        `}</style>
       </div>
       
       <div className="flex justify-between text-sm">

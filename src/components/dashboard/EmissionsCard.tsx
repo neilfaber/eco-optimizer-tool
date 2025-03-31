@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Tree, Zap } from 'lucide-react';
+import { Trees, Zap } from 'lucide-react';
 
 interface EmissionsCardProps {
   gCO2PerVisit: number;
@@ -41,7 +41,7 @@ const EmissionsCard: React.FC<EmissionsCardProps> = ({
       <div className="bg-green-50 rounded-lg p-4 mb-4">
         <div className="flex items-center">
           <div className="bg-green-100 p-1 rounded-full mr-2">
-            <Tree className="h-4 w-4 text-green-600" />
+            <Trees className="h-4 w-4 text-green-600" />
           </div>
           <div className="text-sm text-gray-700">
             Equivalent to {treesEquivalent} tree{treesEquivalent !== 1 ? 's' : ''} per year
