@@ -10,94 +10,19 @@ import PerformanceCard from '@/components/dashboard/PerformanceCard';
 import OptimizationList from '@/components/dashboard/OptimizationList';
 import CertificationCard from '@/components/dashboard/CertificationCard';
 import HostingCard from '@/components/dashboard/HostingCard';
-
-// Simulated optimization data
-const initialOptimizations = [
-  {
-    id: '1',
-    title: 'Compress JPG and PNG images',
-    description: 'Your site has 12 unoptimized images that could be compressed by an average of 62% without quality loss.',
-    impact: 'high' as const,
-    category: 'Images',
-    co2Saving: 24.5,
-    implemented: false
-  },
-  {
-    id: '2',
-    title: 'Enable browser caching',
-    description: 'Setting proper cache headers can reduce repeat downloads and save bandwidth.',
-    impact: 'medium' as const,
-    category: 'Performance',
-    co2Saving: 16.2,
-    implemented: false
-  },
-  {
-    id: '3',
-    title: 'Minify JavaScript and CSS',
-    description: 'Removing whitespace and comments can reduce file sizes by ~20%.',
-    impact: 'medium' as const,
-    category: 'Code',
-    co2Saving: 9.8,
-    implemented: false
-  },
-  {
-    id: '4',
-    title: 'Convert images to WebP format',
-    description: 'WebP offers superior compression and quality compared to JPG and PNG.',
-    impact: 'high' as const,
-    category: 'Images',
-    co2Saving: 18.3,
-    implemented: false
-  },
-  {
-    id: '5',
-    title: 'Implement lazy loading for below-the-fold images',
-    description: 'Only load images when they\'re about to enter the viewport.',
-    impact: 'medium' as const,
-    category: 'Images',
-    co2Saving: 12.1,
-    implemented: false
-  },
-  {
-    id: '6',
-    title: 'Replace custom fonts with system fonts',
-    description: 'System fonts don\'t require additional downloads and render faster.',
-    impact: 'low' as const,
-    category: 'Fonts',
-    co2Saving: 4.5,
-    implemented: false
-  }
-];
-
-// Simulated green hosting providers
-const greenHosts = [
-  {
-    name: 'GreenGeeks',
-    logo: 'https://www.greengeeks.com/assets/GreenGeeks_Logo.png',
-    energySource: '300% Renewable Energy',
-    url: 'https://www.greengeeks.com'
-  },
-  {
-    name: 'A2 Hosting',
-    logo: 'https://www.a2hosting.com/assets/images/A2-Hosting-horizontal-white-text.svg',
-    energySource: '100% Renewable Energy',
-    url: 'https://www.a2hosting.com'
-  },
-  {
-    name: 'DreamHost',
-    logo: 'https://www.dreamhost.com/assets/images/logo.svg',
-    energySource: '100% Carbon Neutral',
-    url: 'https://www.dreamhost.com'
-  }
-];
+import { getLastScanResult, Optimization } from '@/services/scanService';
+import { greenHosts } from '@/data/hostingProviders';
 
 const Dashboard = () => {
   const [searchParams] = useSearchParams();
   const url = searchParams.get('url') || 'example.com';
   const navigate = useNavigate();
   
-  const [score, setScore] = useState(62);
-  const [optimizations, setOptimizations] = useState(initialOptimizations);
+  const [score, setScore] = useState(0);
+  const [optimizations, setOptimizations] = useState<Optimization[]>([]);
+  const [emissions, setEmissions] = useState({ gCO2PerVisit: 0, annualEmissions: 0, potentialSavings: 0 });
+  const [performance, setPerformance] = useState({ loadTime: 0, pageSize: 0, requests: 0, potentialImprovement: 0 });
+  const [hosting, setHosting] = useState({ isGreen: false });
   const [implemented, setImplemented] = useState(0);
   
   // Check authentication
@@ -107,14 +32,33 @@ const Dashboard = () => {
     }
   }, [navigate]);
   
-  // Calculate score based on implemented optimizations
+  // Load scan results
+  useEffect(() => {
+    const scanResult = getLastScanResult();
+    
+    if (scanResult) {
+      setScore(scanResult.score);
+      setOptimizations(scanResult.optimizations);
+      setEmissions(scanResult.emissions);
+      setPerformance(scanResult.performance);
+      setHosting(scanResult.hosting);
+    } else {
+      // If no scan result is found, redirect to scan page
+      navigate('/scan');
+    }
+  }, [navigate]);
+  
+  // Calculate implemented optimizations
   useEffect(() => {
     const implementedCount = optimizations.filter(o => o.implemented).length;
     setImplemented(implementedCount);
     
     // Update score based on implemented optimizations
-    const newScore = Math.min(62 + (implementedCount * 6), 100);
-    setScore(newScore);
+    if (optimizations.length > 0) {
+      const baseScore = getLastScanResult()?.score || 0;
+      const newScore = Math.min(baseScore + (implementedCount * 6), 100);
+      setScore(newScore);
+    }
   }, [optimizations]);
   
   // Handle implementing an optimization
@@ -143,15 +87,15 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <EcoScoreCard score={score} />
             <EmissionsCard 
-              gCO2PerVisit={1.82} 
+              gCO2PerVisit={emissions.gCO2PerVisit} 
               annualVisits={100000}
-              potentialSavings={68}
+              potentialSavings={emissions.potentialSavings}
             />
             <PerformanceCard 
-              loadTime={3.4}
-              pageSize={2300000}
-              requests={56}
-              potentialImprovement={1.8}
+              loadTime={performance.loadTime}
+              pageSize={performance.pageSize}
+              requests={performance.requests}
+              potentialImprovement={performance.potentialImprovement}
             />
           </div>
           
@@ -172,7 +116,7 @@ const Dashboard = () => {
               />
               
               <HostingCard 
-                currentHostIsGreen={false}
+                currentHostIsGreen={hosting.isGreen}
                 recommendedHosts={greenHosts}
               />
             </div>

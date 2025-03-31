@@ -2,13 +2,7 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Database, ExternalLink } from 'lucide-react';
-
-interface GreenHost {
-  name: string;
-  logo: string;
-  energySource: string;
-  url: string;
-}
+import { GreenHost } from '@/data/hostingProviders';
 
 interface HostingCardProps {
   currentHostIsGreen: boolean;

@@ -1,14 +1,17 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Leaf, Loader } from 'lucide-react';
+import { scanWebsite, storeScanResult } from '@/services/scanService';
 
 const ScanForm = () => {
   const [url, setUrl] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,9 +26,15 @@ const ScanForm = () => {
       return;
     }
     
+    // Normalize URL (add https:// if missing)
+    let normalizedUrl = url;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      normalizedUrl = `https://${url}`;
+    }
+    
     try {
-      // Add basic URL validation
-      new URL(url.startsWith('http') ? url : `https://${url}`);
+      // Validate URL format
+      new URL(normalizedUrl);
     } catch {
       toast({
         title: "Invalid URL",
@@ -37,18 +46,30 @@ const ScanForm = () => {
     
     setIsScanning(true);
     
-    // Simulate scanning process
-    setTimeout(() => {
-      setIsScanning(false);
+    try {
+      // Perform the actual website scan
+      const scanResult = await scanWebsite(normalizedUrl);
       
-      // Redirect to results page would happen here in a real app
+      // Store the scan result for retrieval on the dashboard
+      storeScanResult(scanResult);
+      
       toast({
         title: "Scan Complete",
         description: "Your website has been analyzed!",
       });
       
-      window.location.href = `/dashboard?url=${encodeURIComponent(url)}`;
-    }, 3000);
+      // Navigate to dashboard with URL parameter
+      navigate(`/dashboard?url=${encodeURIComponent(normalizedUrl)}`);
+    } catch (error) {
+      console.error('Scan error:', error);
+      toast({
+        title: "Scan Failed",
+        description: "We couldn't complete the analysis. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsScanning(false);
+    }
   };
 
   return (
