@@ -18,25 +18,25 @@ const FeatureDetail = ({
   points: string[];
 }) => {
   return (
-    <div className="py-12 border-b border-gray-200 last:border-0">
+    <div className="py-12 border-b border-gray-200 dark:border-gray-700 last:border-0">
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
-          <div className="inline-flex items-center justify-center bg-green-100 rounded-full p-3 mb-4">
+          <div className="inline-flex items-center justify-center bg-green-100 dark:bg-green-900/30 rounded-full p-3 mb-4">
             {icon}
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">{title}</h3>
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
         </div>
         
         <div className="md:col-span-2">
-          <p className="text-lg text-gray-600 mb-6">{description}</p>
+          <p className="text-lg text-gray-600 dark:text-gray-300 mb-6">{description}</p>
           
           <ul className="space-y-3">
             {points.map((point, index) => (
               <li key={index} className="flex items-start">
-                <div className="mt-1 bg-green-100 rounded-full p-1 mr-3">
-                  <Leaf className="h-3 w-3 text-green-600" />
+                <div className="mt-1 bg-green-100 dark:bg-green-900/30 rounded-full p-1 mr-3">
+                  <Leaf className="h-3 w-3 text-green-600 dark:text-green-400" />
                 </div>
-                <span className="text-gray-700">{point}</span>
+                <span className="text-gray-700 dark:text-gray-300">{point}</span>
               </li>
             ))}
           </ul>
@@ -49,7 +49,7 @@ const FeatureDetail = ({
 const Features = () => {
   const features = [
     {
-      icon: <Gauge className="h-8 w-8 text-green-600" />,
+      icon: <Gauge className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Carbon Impact Dashboard",
       description: "Our powerful dashboard provides real-time insights into your website's environmental impact with clear metrics and visualizations.",
       points: [
@@ -60,7 +60,7 @@ const Features = () => {
       ]
     },
     {
-      icon: <Zap className="h-8 w-8 text-green-600" />,
+      icon: <Zap className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Automated Fixes",
       description: "GreenAudit doesn't just identify problems – it provides one-click solutions to reduce your website's carbon footprint.",
       points: [
@@ -71,7 +71,7 @@ const Features = () => {
       ]
     },
     {
-      icon: <Database className="h-8 w-8 text-green-600" />,
+      icon: <Database className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Green Hosting Recommender",
       description: "Find environmentally responsible hosting providers that align with your sustainability goals.",
       points: [
@@ -82,7 +82,7 @@ const Features = () => {
       ]
     },
     {
-      icon: <Shield className="h-8 w-8 text-green-600" />,
+      icon: <Shield className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Eco-Score Certification",
       description: "Earn recognition for your commitment to environmental responsibility with our trusted certification.",
       points: [
@@ -93,7 +93,7 @@ const Features = () => {
       ]
     },
     {
-      icon: <GlobeLock className="h-8 w-8 text-green-600" />,
+      icon: <GlobeLock className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Dark Pattern Detector",
       description: "Identify user experience elements that waste energy and provide ethical alternatives.",
       points: [
@@ -104,7 +104,7 @@ const Features = () => {
       ]
     },
     {
-      icon: <ArrowUp className="h-8 w-8 text-green-600" />,
+      icon: <ArrowUp className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Performance Correlation",
       description: "See the direct relationship between sustainability improvements and website performance.",
       points: [
@@ -115,7 +115,7 @@ const Features = () => {
       ]
     },
     {
-      icon: <Code className="h-8 w-8 text-green-600" />,
+      icon: <Code className="h-8 w-8 text-green-600 dark:text-green-400" />,
       title: "Developer API",
       description: "Integrate GreenAudit's powerful tools directly into your development workflow.",
       points: [
@@ -132,16 +132,16 @@ const Features = () => {
       <Navbar />
       
       <main className="flex-grow">
-        <div className="pt-24 pb-16 bg-gradient-to-b from-white to-green-50">
+        <div className="pt-24 pb-16 bg-gradient-to-b from-white to-green-50 dark:from-gray-900 dark:to-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Powerful Features for a Greener Web</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Powerful Features for a Greener Web</h1>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               GreenAudit provides comprehensive tools to analyze, optimize, and certify your website's environmental impact.
             </p>
           </div>
         </div>
         
-        <div className="py-8 bg-white">
+        <div className="py-8 bg-white dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             {features.map((feature, index) => (
               <FeatureDetail 

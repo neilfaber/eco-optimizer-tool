@@ -52,7 +52,7 @@ const ScanForm: React.FC<ScanFormProps> = ({ onSubmit, isScanning }) => {
               disabled={isScanning}
             />
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
-              <Search className="h-4 w-4 text-gray-400" />
+              <Search className="h-4 w-4 text-gray-400 dark:text-gray-500" />
             </div>
           </div>
           {error && (
@@ -78,7 +78,7 @@ const ScanForm: React.FC<ScanFormProps> = ({ onSubmit, isScanning }) => {
           <Button
             type="button"
             variant="outline"
-            className="bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 flex-1"
+            className="bg-white hover:bg-gray-50 dark:bg-gray-700 dark:hover:bg-gray-600 flex-1 border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200"
             onClick={() => setUrl('')}
             disabled={isScanning || !url}
           >

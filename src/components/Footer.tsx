@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <div className="bg-green-500 rounded-full p-1">
+              <div className="bg-green-500 dark:bg-green-600 rounded-full p-1">
                 <Leaf className="h-5 w-5 text-white" />
               </div>
               <span className="text-lg font-bold text-green-700 dark:text-green-400">GreenAudit</span>
@@ -62,7 +62,7 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center">
+        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             &copy; {new Date().getFullYear()} GreenAudit. All rights reserved.
           </p>

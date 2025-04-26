@@ -14,6 +14,7 @@ import EmissionsCard from '@/components/dashboard/EmissionsCard';
 import PerformanceCard from '@/components/dashboard/PerformanceCard';
 import OptimizationList from '@/components/dashboard/OptimizationList';
 import { toast } from '@/components/ui/use-toast';
+import { Optimization } from '@/services/scanService';
 
 const Scan = () => {
   const [isScanning, setIsScanning] = useState(false);
@@ -124,7 +125,7 @@ const Scan = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <EcoScoreCard score={scanResult.ecoScore} />
                     <EmissionsCard 
-                      grams={scanResult.carbonImpact.grams} 
+                      emissions={scanResult.carbonImpact.grams} 
                       rating={scanResult.carbonImpact.rating} 
                     />
                     <Card className="bg-white dark:bg-gray-800">
@@ -220,7 +221,7 @@ const Scan = () => {
                 <TabsContent value="carbon">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <EmissionsCard 
-                      grams={scanResult.carbonImpact.grams} 
+                      emissions={scanResult.carbonImpact.grams} 
                       rating={scanResult.carbonImpact.rating} 
                       className="h-full"
                     />
@@ -254,7 +255,7 @@ const Scan = () => {
                 <TabsContent value="performance">
                   <div className="grid grid-cols-1 gap-6">
                     <PerformanceCard 
-                      score={scanResult.performance.score}
+                      performanceScore={scanResult.performance.score}
                       metrics={[
                         { 
                           name: "First Contentful Paint", 
@@ -288,10 +289,14 @@ const Scan = () => {
                 <TabsContent value="recommendations">
                   <OptimizationList 
                     optimizations={scanResult.optimizations.map(opt => ({
+                      id: opt.id || '',
                       title: opt.title,
                       description: opt.description,
-                      impact: opt.impact
-                    }))} 
+                      impact: opt.impact,
+                      category: 'optimization',
+                      co2Saving: 0,
+                      implemented: false
+                    } as Optimization))} 
                   />
                 </TabsContent>
               </Tabs>
