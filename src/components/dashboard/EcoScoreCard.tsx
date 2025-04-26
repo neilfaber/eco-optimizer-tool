@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Progress } from "@/components/ui/progress";
 import { Leaf } from 'lucide-react';
 
 interface EcoScoreCardProps {
@@ -8,14 +7,21 @@ interface EcoScoreCardProps {
 }
 
 const EcoScoreCard: React.FC<EcoScoreCardProps> = ({ score }) => {
-  // Determine score color
+  // Calculate the circumference of the circle
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  
+  // Calculate the filled portion of the circle based on the score
+  const fillPercent = score / 100;
+  const dashOffset = circumference - (circumference * fillPercent);
+  
+  // Determine score color and label
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-yellow-600';
     return 'text-red-600';
   };
   
-  // Determine score label
   const getScoreLabel = (score: number) => {
     if (score >= 80) return 'Excellent';
     if (score >= 60) return 'Good';
@@ -23,41 +29,67 @@ const EcoScoreCard: React.FC<EcoScoreCardProps> = ({ score }) => {
     return 'Poor';
   };
   
-  // Determine progress color
-  const getProgressColor = (score: number) => {
-    if (score >= 80) return 'bg-green-600';
-    if (score >= 60) return 'bg-yellow-500';
-    return 'bg-red-500';
+  const getStrokeColor = (score: number) => {
+    if (score >= 80) return 'stroke-green-500';
+    if (score >= 60) return 'stroke-yellow-500';
+    return 'stroke-red-500';
   };
 
-  const progressColor = getProgressColor(score);
-
   return (
-    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-lg text-gray-900">Eco Score</h3>
-        <div className="bg-green-100 p-1 rounded-full">
-          <Leaf className="h-5 w-5 text-green-600" />
+        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Eco Score</h3>
+        <div className="bg-green-100 dark:bg-green-900/30 p-1 rounded-full">
+          <Leaf className="h-5 w-5 text-green-600 dark:text-green-400" />
         </div>
       </div>
       
-      <div className="flex items-end justify-between mb-2">
-        <div className={`text-5xl font-bold ${getScoreColor(score)}`}>
-          {score}
-        </div>
-        <div className="text-gray-500 text-sm font-medium">
-          out of 100
+      <div className="flex justify-center items-center mb-4">
+        <div className="relative w-40 h-40 flex items-center justify-center">
+          {/* Background circle */}
+          <svg className="w-full h-full" viewBox="0 0 160 160">
+            <circle 
+              cx="80" 
+              cy="80" 
+              r={radius} 
+              fill="none" 
+              strokeWidth="10" 
+              className="stroke-gray-100 dark:stroke-gray-700" 
+            />
+            {/* Progress circle */}
+            <circle 
+              cx="80" 
+              cy="80" 
+              r={radius} 
+              fill="none" 
+              strokeWidth="10" 
+              className={`${getStrokeColor(score)} transition-all duration-1000 ease-in-out`} 
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={dashOffset}
+              style={{ 
+                transformOrigin: 'center',
+                transform: 'rotate(-90deg)'
+              }}
+            />
+          </svg>
+          
+          {/* Score text in the middle */}
+          <div className="absolute flex flex-col items-center">
+            <div className={`text-4xl font-bold ${getScoreColor(score)}`}>
+              {score}
+            </div>
+            <div className="text-gray-500 dark:text-gray-400 text-sm">
+              out of 100
+            </div>
+          </div>
         </div>
       </div>
       
-      <div className="mb-2">
-        <Progress value={score} className={`h-2 ${progressColor}`} />
-      </div>
-      
-      <div className="flex justify-between text-sm">
-        <div className="text-gray-500">0</div>
-        <div className={`font-medium ${getScoreColor(score)}`}>{getScoreLabel(score)}</div>
-        <div className="text-gray-500">100</div>
+      <div className="flex justify-center">
+        <div className={`font-medium text-sm ${getScoreColor(score)}`}>
+          {getScoreLabel(score)}
+        </div>
       </div>
     </div>
   );

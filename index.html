@@ -1,11 +1,20 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Green-Audit</title>
-    <meta name="description" content="Project" />
+    <meta name="description" content="Analyze your website's environmental impact and reduce carbon footprint" />
     <meta name="Neil" content="App" />
+    <script>
+      // Initialize the theme
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    </script>
   </head>
 
   <body>
