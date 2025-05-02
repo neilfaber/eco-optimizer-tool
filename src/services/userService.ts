@@ -10,6 +10,7 @@ interface UserProfile {
   optimizationsCompleted: number;
   joined: Date;
   websites: Website[];
+  avatar?: string; // New field for user avatar
 }
 
 interface Website {
@@ -83,6 +84,13 @@ export const getUserProfile = (): UserProfile => {
   const newProfile = generateInitialUserProfile();
   localStorage.setItem('userProfile', JSON.stringify(newProfile));
   return newProfile;
+};
+
+// Update user avatar
+export const updateUserAvatar = (avatarUrl: string): void => {
+  const profile = getUserProfile();
+  profile.avatar = avatarUrl;
+  localStorage.setItem('userProfile', JSON.stringify(profile));
 };
 
 // Add eco credits to user
