@@ -125,8 +125,9 @@ const Scan = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <EcoScoreCard score={scanResult.ecoScore} />
                     <EmissionsCard 
-                      emissions={scanResult.carbonImpact.grams} 
-                      rating={scanResult.carbonImpact.rating} 
+                      gCO2PerVisit={scanResult.carbonImpact.grams} 
+                      annualVisits={10000}
+                      potentialSavings={30} 
                     />
                     <Card className="bg-white dark:bg-gray-800">
                       <CardHeader className="pb-2">
@@ -221,9 +222,9 @@ const Scan = () => {
                 <TabsContent value="carbon">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <EmissionsCard 
-                      emissions={scanResult.carbonImpact.grams} 
-                      rating={scanResult.carbonImpact.rating} 
-                      className="h-full"
+                      gCO2PerVisit={scanResult.carbonImpact.grams} 
+                      annualVisits={10000}
+                      potentialSavings={30} 
                     />
                     <Card className="bg-white dark:bg-gray-800">
                       <CardHeader>
@@ -255,33 +256,10 @@ const Scan = () => {
                 <TabsContent value="performance">
                   <div className="grid grid-cols-1 gap-6">
                     <PerformanceCard 
-                      performanceScore={scanResult.performance.score}
-                      metrics={[
-                        { 
-                          name: "First Contentful Paint", 
-                          value: `${scanResult.performance.firstContentfulPaint.toFixed(1)}s`, 
-                          status: scanResult.performance.firstContentfulPaint < 1.8 ? "good" : 
-                                 scanResult.performance.firstContentfulPaint < 3 ? "average" : "poor"
-                        },
-                        { 
-                          name: "Largest Contentful Paint", 
-                          value: `${scanResult.performance.largestContentfulPaint.toFixed(1)}s`, 
-                          status: scanResult.performance.largestContentfulPaint < 2.5 ? "good" : 
-                                 scanResult.performance.largestContentfulPaint < 4 ? "average" : "poor"
-                        },
-                        { 
-                          name: "Total Blocking Time", 
-                          value: `${scanResult.performance.totalBlockingTime}ms`, 
-                          status: scanResult.performance.totalBlockingTime < 200 ? "good" : 
-                                 scanResult.performance.totalBlockingTime < 600 ? "average" : "poor"
-                        },
-                        { 
-                          name: "Cumulative Layout Shift", 
-                          value: scanResult.performance.cumulativeLayoutShift.toFixed(2), 
-                          status: scanResult.performance.cumulativeLayoutShift < 0.1 ? "good" : 
-                                 scanResult.performance.cumulativeLayoutShift < 0.25 ? "average" : "poor"
-                        }
-                      ]}
+                      loadTime={scanResult.performance.largestContentfulPaint} 
+                      pageSize={200000} // Placeholder value for page size in bytes
+                      requests={32} // Placeholder value for number of requests
+                      potentialImprovement={1.5} // Placeholder value for potential improvement
                     />
                   </div>
                 </TabsContent>
@@ -294,9 +272,11 @@ const Scan = () => {
                       description: opt.description,
                       impact: opt.impact,
                       category: 'optimization',
-                      co2Saving: 0,
+                      co2Saving: 0.5, // Add default CO2 saving value
                       implemented: false
                     } as Optimization))} 
+                    onImplement={(id) => console.log(`Implement optimization: ${id}`)}
+                    websiteUrl={scanResult.url}
                   />
                 </TabsContent>
               </Tabs>
